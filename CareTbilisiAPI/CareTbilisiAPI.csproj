@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CareTbilisiAPI.Application\CareTbilisiAPI.Application.csproj" />
+    <ProjectReference Include="..\CareTbilisiAPI.Domain\CareTbilisiAPI.Domain.csproj" />
+    <ProjectReference Include="..\CareTbilisiAPI.Infrastructure\CareTbilisiAPI.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
