@@ -31,7 +31,7 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
 
             if (item.Comments.Count() != 0) itemForUpdate.PushEach("comments", item.Comments);
 
-            if (item.Picture.Length != 0) itemForUpdate.PushEach("picture", item.Picture);
+            if (item.Picture.Count() != 0) itemForUpdate.PushEach("picture", item.Picture);
 
             _collection.UpdateOne(entity => entity.Id == id, itemForUpdate);
         }

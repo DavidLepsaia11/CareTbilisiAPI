@@ -18,12 +18,12 @@ namespace CareTbilisiAPI.Controllers
         public ItemsController(IMapper mapper , IItemRepository repository)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _repository = repository;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
         // GET: api/<ItemsController>
         [HttpGet]
-        public ActionResult<IEnumerable<Item>> GetAll()
+        public ActionResult<IEnumerable<ResponseItemModel>> GetAll()
         {
             var allItems = _repository.GetAll();
 
@@ -31,13 +31,12 @@ namespace CareTbilisiAPI.Controllers
             {
                 return NotFound("There are no items");
             }
-
-            return Ok(allItems);
+            return Ok(_mapper.Map<ICollection<ResponseItemModel>>(allItems).ToList());
         }
 
         // GET api/<ItemsController>/5
         [HttpGet("{id}")]
-        public ActionResult<Item> Get(string id)
+        public ActionResult<ResponseItemModel> Get(string id)
         {
             var item = _repository.GetById(id);
 
@@ -45,28 +44,49 @@ namespace CareTbilisiAPI.Controllers
             {
                 return NotFound();
             }
-            return Ok(item);
+
+            return Ok(_mapper.Map<ResponseItemModel>(item));
         }
 
         // POST api/<ItemsController>
         [HttpPost]
-        public void Post([FromBody] RequestItemModel requestItemModel)
+        public ActionResult<ResponseItemModel> Post([FromBody] RequestItemModel requestItemModel)
         {
             var item = _mapper.Map<Item>(requestItemModel);
+            var createdItem = _repository.Create(item);
+            var responseModel = _mapper.Map<ResponseItemModel>(createdItem);
 
-            _repository.Create(item);
+            return CreatedAtAction("Get", responseModel);
         }
 
-        // PUT api/<ItemsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // Patch api/<ItemsController>/5
+        [HttpPatch("{id}")]
+        public IActionResult Patch(string id, [FromBody] RequestItemModel requestItemModel)
         {
+            var item = _repository.GetById(id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+            item = _mapper.Map<Item>(requestItemModel);
+            _repository.UpdateByField(id, item);
+
+            return NoContent();
         }
 
         // DELETE api/<ItemsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(string id)
         {
+            var item = _repository.GetById(id);
+
+            if (item == null)
+            {
+                return NotFound();
+            }
+            _repository.Remove(id);
+            return NoContent();
         }
     }
 }

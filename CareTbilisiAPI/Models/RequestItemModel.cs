@@ -6,7 +6,7 @@ namespace CareTbilisiAPI.Models
     {
         public string Description { get; set; } = null!;
 
-        public byte[]  Picture { get; set; } = new byte[0];
+        public IEnumerable<byte> Picture { get; set; } = new byte[0];  
 
         public string Location { get; set; } = null!;
 

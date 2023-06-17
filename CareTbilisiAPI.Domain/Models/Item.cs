@@ -24,7 +24,7 @@ namespace CareTbilisiAPI.Domain.Models
         public string Location { get; set; }
 
         [BsonElement("picture")]
-        public byte[] Picture { get; set; } = new byte[0];
+        public IEnumerable<byte> Picture { get; set; } = new byte[0];
 
         [BsonElement("status")]
         public StatusEnum? Status { get; set; }
