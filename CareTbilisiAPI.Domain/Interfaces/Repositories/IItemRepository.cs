@@ -9,6 +9,6 @@ namespace CareTbilisiAPI.Domain.Interfaces.Repositories
 {
     public interface IItemRepository : IRepository<Item>
     {
-         void UpdateByField(string id, Item entity);
+        
     }
 }

@@ -10,7 +10,7 @@ namespace CareTbilisiAPI.Models
 
         public string Location { get; init; } = null!;
 
-        public ICollection<byte>? Picture { get; init; }
+        public string? Picture { get; init; }
 
         public StatusEnum? Status { get; init; }
 

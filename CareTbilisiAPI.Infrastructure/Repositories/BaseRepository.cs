@@ -36,7 +36,7 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
 
         public void Remove(string id)
         {
-            _collection.DeleteOne(id);
+            _collection.DeleteOne(entity => entity.Id == id);
         }
 
         public void Update(string id, TEntity entity)

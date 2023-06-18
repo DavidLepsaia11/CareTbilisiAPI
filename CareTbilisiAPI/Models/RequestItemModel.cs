@@ -4,16 +4,16 @@ namespace CareTbilisiAPI.Models
 {
     public class RequestItemModel
     {
-        public string Description { get; set; } = null!;
+        public string Description { get; set; }/* = null!;*/
 
-        public IEnumerable<byte> Picture { get; set; } = new byte[0];  
+        public string? Picture { get; set; }  
 
-        public string Location { get; set; } = null!;
+        public string? Location { get; set; } /*= null!;*/
 
         public StatusEnum? Status { get; set; }
 
         public ProblemTypeEnum? Category { get; set; }
 
-        public ICollection<string> Comments { get; set; } = new List<string>();
+        public ICollection<string> ? Comments { get; set; }
     }
 }

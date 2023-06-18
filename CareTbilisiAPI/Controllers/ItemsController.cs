@@ -3,6 +3,7 @@ using CareTbilisiAPI.Domain.Interfaces.Repositories;
 using CareTbilisiAPI.Domain.Models;
 using CareTbilisiAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -53,24 +54,25 @@ namespace CareTbilisiAPI.Controllers
         public ActionResult<ResponseItemModel> Post([FromBody] RequestItemModel requestItemModel)
         {
             var item = _mapper.Map<Item>(requestItemModel);
-            var createdItem = _repository.Create(item);
-            var responseModel = _mapper.Map<ResponseItemModel>(createdItem);
+            var createdModel = _repository.Create(item);
+            var responseModel = _mapper.Map<ResponseItemModel>(createdModel);
 
-            return CreatedAtAction("Get", responseModel);
+            return CreatedAtAction("Get", new { id = responseModel.Id }, responseModel);
         }
 
         // Patch api/<ItemsController>/5
         [HttpPatch("{id}")]
         public IActionResult Patch(string id, [FromBody] RequestItemModel requestItemModel)
         {
-            var item = _repository.GetById(id);
+            var checkeditem = _repository.GetById(id);
 
-            if (item == null)
+            if (checkeditem == null)
             {
                 return NotFound();
             }
-            item = _mapper.Map<Item>(requestItemModel);
-            _repository.UpdateByField(id, item);
+
+            var UpdateModel = PrepareItemForUpdate(requestItemModel, checkeditem);
+            _repository.Update(id, UpdateModel);
 
             return NoContent();
         }
@@ -88,5 +90,31 @@ namespace CareTbilisiAPI.Controllers
             _repository.Remove(id);
             return NoContent();
         }
+
+
+        #region Private Methods
+        private Item PrepareItemForUpdate(RequestItemModel requestModel, Item model) 
+        {
+            var modelForUpdate = _mapper.Map<Item>(requestModel);
+
+            Type type = model.GetType();
+
+            PropertyInfo[] properties = type.GetProperties();
+
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.Name != "Id")
+                {
+                    var valueUpdateModel = property?.GetValue(modelForUpdate);
+
+                    if (!(valueUpdateModel == null && string.IsNullOrEmpty(valueUpdateModel?.ToString())))
+                    {
+                        property?.SetValue(model, valueUpdateModel);
+                    }
+                }
+            }
+            return model;
+        }
+        #endregion
     }
 }

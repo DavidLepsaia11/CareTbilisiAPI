@@ -24,7 +24,7 @@ namespace CareTbilisiAPI.Domain.Models
         public string Location { get; set; }
 
         [BsonElement("picture")]
-        public IEnumerable<byte> Picture { get; set; } = new byte[0];
+        public string? Picture { get; set; }
 
         [BsonElement("status")]
         public StatusEnum? Status { get; set; }
@@ -33,10 +33,10 @@ namespace CareTbilisiAPI.Domain.Models
         public ProblemTypeEnum? Category { get; set; }
 
         [BsonElement("comments")]
-        public ICollection<string> Comments { get; set; } = new List<string>();
+        public ICollection<string> Comments { get; set; }
 
         [BsonElement("createDate")]
-        public DateTime? CreateDate { get; set; } 
+        public DateTime? CreateDate { get; set; }
 
         [BsonElement("updateDate")]
         public DateTime? UpdateDate { get; set; }

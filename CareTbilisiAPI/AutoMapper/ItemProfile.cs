@@ -8,7 +8,8 @@ namespace CareTbilisiAPI.AutoMapper
     {
         public ItemProfile()
         {
-            CreateMap<RequestItemModel,Item>();
+            CreateMap<RequestItemModel, Item>();
+
             CreateMap<Item,ResponseItemModel>();
         }
     }
