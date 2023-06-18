@@ -54,6 +54,8 @@ namespace CareTbilisiAPI.Controllers
         public ActionResult<ResponseItemModel> Post([FromBody] RequestItemModel requestItemModel)
         {
             var item = _mapper.Map<Item>(requestItemModel);
+            item.CreateDate = DateTime.Now; 
+
             var createdModel = _repository.Create(item);
             var responseModel = _mapper.Map<ResponseItemModel>(createdModel);
 
@@ -72,6 +74,8 @@ namespace CareTbilisiAPI.Controllers
             }
 
             var UpdateModel = PrepareItemForUpdate(requestItemModel, checkeditem);
+            UpdateModel.UpdateDate = DateTime.Now;  
+
             _repository.Update(id, UpdateModel);
 
             return NoContent();
