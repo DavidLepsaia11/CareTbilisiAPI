@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CareTbilisiAPI.Application.Services
 {
-    public class ItemService : BaseService<Item, IItemRepository>
+    public class ItemService : BaseService<Item, IItemRepository> , IItemService
     {
         public ItemService(IItemRepository repository) : base(repository)
         {

@@ -1,5 +1,7 @@
+using CareTbilisiAPI.Application.Services;
 using CareTbilisiAPI.Domain.Interfaces;
 using CareTbilisiAPI.Domain.Interfaces.Repositories;
+using CareTbilisiAPI.Domain.Interfaces.Services;
 using CareTbilisiAPI.Domain.Models;
 using CareTbilisiAPI.Infrastructure.Repositories;
 using Microsoft.Extensions.Options;
@@ -17,6 +19,8 @@ builder.Services.Configure<DatabaseSettings>(
 builder.Services.AddSingleton<IDatabaseSettings>(obj => obj.GetRequiredService<IOptions<DatabaseSettings>>().Value);
 
 builder.Services.AddSingleton<IMongoClient>(s => new MongoClient(builder.Configuration.GetValue<string>("DatabaseSettings:ConnectionString")));
+
+builder.Services.AddScoped<IItemService, ItemService>();
 
 builder.Services.AddTransient<IItemRepository, ItemRepository>();
 

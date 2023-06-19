@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CareTbilisiAPI.Domain.Interfaces.Repositories;
+using CareTbilisiAPI.Domain.Interfaces.Services;
 using CareTbilisiAPI.Domain.Models;
 using CareTbilisiAPI.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,20 +14,20 @@ namespace CareTbilisiAPI.Controllers
     [ApiController]
     public class ItemsController : ControllerBase
     {
-        private IItemRepository _repository;
+        private IItemService _service;
         private IMapper _mapper;
 
-        public ItemsController(IMapper mapper , IItemRepository repository)
+        public ItemsController(IMapper mapper , IItemService service)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         // GET: api/<ItemsController>
         [HttpGet]
         public ActionResult<IEnumerable<ResponseItemModel>> GetAll()
         {
-            var allItems = _repository.GetAll();
+            var allItems = _service.GetAll();
 
             if (allItems.Count == 0)
             {
@@ -39,7 +40,7 @@ namespace CareTbilisiAPI.Controllers
         [HttpGet("{id}")]
         public ActionResult<ResponseItemModel> Get(string id)
         {
-            var item = _repository.GetById(id);
+            var item = _service.GetById(id);
 
             if (item == null)
             {
@@ -56,7 +57,7 @@ namespace CareTbilisiAPI.Controllers
             var item = _mapper.Map<Item>(requestItemModel);
             item.CreateDate = DateTime.Now; 
 
-            var createdModel = _repository.Create(item);
+            var createdModel = _service.Create(item);
             var responseModel = _mapper.Map<ResponseItemModel>(createdModel);
 
             return CreatedAtAction("Get", new { id = responseModel.Id }, responseModel);
@@ -66,7 +67,7 @@ namespace CareTbilisiAPI.Controllers
         [HttpPatch("{id}")]
         public IActionResult Patch(string id, [FromBody] RequestItemModel requestItemModel)
         {
-            var checkeditem = _repository.GetById(id);
+            var checkeditem = _service.GetById(id);
 
             if (checkeditem == null)
             {
@@ -76,7 +77,7 @@ namespace CareTbilisiAPI.Controllers
             var UpdateModel = PrepareItemForUpdate(requestItemModel, checkeditem);
             UpdateModel.UpdateDate = DateTime.Now;  
 
-            _repository.Update(id, UpdateModel);
+            _service.Update(id, UpdateModel);
 
             return NoContent();
         }
@@ -85,13 +86,13 @@ namespace CareTbilisiAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
-            var item = _repository.GetById(id);
+            var item = _service.GetById(id);
 
             if (item == null)
             {
                 return NotFound();
             }
-            _repository.Remove(id);
+            _service.Remove(id);
             return NoContent();
         }
 
