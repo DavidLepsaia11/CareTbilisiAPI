@@ -1,4 +1,5 @@
-﻿using CareTbilisiAPI.Domain.Interfaces.Repositories;
+﻿using CareTbilisiAPI.Domain.Enums;
+using CareTbilisiAPI.Domain.Interfaces.Repositories;
 using CareTbilisiAPI.Domain.Interfaces.Services;
 using CareTbilisiAPI.Domain.Models;
 using System;
@@ -14,6 +15,11 @@ namespace CareTbilisiAPI.Application.Services
         public ItemService(IItemRepository repository) : base(repository)
         {
 
+        }
+
+        public IEnumerable<Item> FilterItemByAttribute(string? location, ProblemTypeEnum? category, DateTime? createDate, int currentPage = 1, int pageSize = 6)
+        {
+            return _repository.FilterItemByAttribute(location, category, createDate, currentPage, pageSize);
         }
     }
 }

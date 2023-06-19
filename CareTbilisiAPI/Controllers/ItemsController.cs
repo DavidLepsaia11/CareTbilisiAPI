@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CareTbilisiAPI.Domain.Enums;
 using CareTbilisiAPI.Domain.Interfaces.Repositories;
 using CareTbilisiAPI.Domain.Interfaces.Services;
 using CareTbilisiAPI.Domain.Models;
@@ -34,6 +35,27 @@ namespace CareTbilisiAPI.Controllers
                 return NotFound("There are no items");
             }
             return Ok(_mapper.Map<ICollection<ResponseItemModel>>(allItems).ToList());
+        }
+
+        // GET: api/<ItemsController>
+        [HttpGet]
+        [Route("GetFilteredItems/{category : string}/{location : string}/{createDate : string }")]
+        public ActionResult<IEnumerable<ResponseItemModel>> GetFilteredItems(string? category , string? location , string? createDate)
+        {
+            ProblemTypeEnum? itemCategoty = null;
+
+            if (category != null)
+            {
+               itemCategoty = (ProblemTypeEnum)Enum.Parse(typeof(ProblemTypeEnum), category);
+            } 
+
+            var filteredItems = _service.FilterItemByAttribute(location, itemCategoty, DateTime.Now);
+
+            if (filteredItems.Count() == 0)
+            {
+                return NotFound("There are no  such items");
+            }
+            return Ok(_mapper.Map<ICollection<ResponseItemModel>>(filteredItems).ToList());
         }
 
         // GET api/<ItemsController>/5

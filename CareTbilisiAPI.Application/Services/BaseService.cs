@@ -14,7 +14,7 @@ namespace CareTbilisiAPI.Application.Services
         where TEntity : IEntity
         where TRepository : IRepository<TEntity>
     {
-        private readonly TRepository _repository;
+        protected readonly TRepository _repository;
 
         public BaseService(TRepository repository)
         {

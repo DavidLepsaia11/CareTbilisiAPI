@@ -19,12 +19,15 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
 
         }
 
-        public ICollection<Item> FilterItemByAttribute(string location , ProblemTypeEnum category , DateTime createDate )
+        public IEnumerable<Item> FilterItemByAttribute(string? location , ProblemTypeEnum? category , DateTime? createDate, int currentPage , int pageSize)
         {
-            var filteredItems = Filter( item => item.Category == category ||
-                                                item.Location == location ||
-                                                item.CreateDate == createDate
-                                      );
+            Expression<Func<Item, bool>> predicate = (item) => (location != null ? item.Location == location : true ||
+                                                               category != null ? item.Category == category : true ||
+                                                               createDate != null ? item.CreateDate == createDate : true);
+
+            var filteredItems = Filter(predicate)
+                                .Skip((currentPage - 1) * pageSize)
+                                .Take(pageSize);
 
             return filteredItems;
         }
