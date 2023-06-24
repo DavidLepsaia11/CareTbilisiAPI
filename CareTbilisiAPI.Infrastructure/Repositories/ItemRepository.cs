@@ -26,13 +26,24 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
                                                                   item.CreateDate.Year == createDate.Value.Year &&
                                                                   item.CreateDate.Month == createDate.Value.Month &&
                                                                   item.CreateDate.Day == createDate.Value.Day  
-                                                                                                                                    );
+                                                                                                             );
 
             var filteredItems = Filter(predicate)
                                 .Skip((currentPage - 1) * pageSize)
                                 .Take(pageSize);
 
             return filteredItems;
+        }
+
+        public IEnumerable<Item> SortItemDescByCreateDay(int currentPage, int pageSize)
+        {
+            var items = GetAll()
+                 .OrderByDescending( item => item.CreateDate)
+                 .Skip((currentPage - 1) * pageSize)
+                 .Take(pageSize);
+
+
+            return items;
         }
     }
 }

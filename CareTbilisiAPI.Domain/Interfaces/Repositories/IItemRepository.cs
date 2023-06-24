@@ -12,5 +12,7 @@ namespace CareTbilisiAPI.Domain.Interfaces.Repositories
     public interface IItemRepository : IRepository<Item>
     {
         IEnumerable<Item> FilterItemByAttribute(string? location, ProblemTypeEnum? category, DateTime? createDate, int currentPage, int pageSize);
+
+        IEnumerable<Item> SortItemDescByCreateDay( int currentPage, int pageSize);
     }
 }

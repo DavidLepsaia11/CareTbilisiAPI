@@ -21,5 +21,10 @@ namespace CareTbilisiAPI.Application.Services
         {
             return _repository.FilterItemByAttribute(location, category, createDate, currentPage, pageSize);
         }
+
+        public IEnumerable<Item> SortItemDescByCreateDay(int currentPage, int pageSize)
+        {
+            return _repository.SortItemDescByCreateDay(currentPage, pageSize);
+        }
     }
 }

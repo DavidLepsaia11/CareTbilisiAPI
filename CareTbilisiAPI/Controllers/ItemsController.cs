@@ -25,35 +25,6 @@ namespace CareTbilisiAPI.Controllers
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-        // GET: api/<ItemsController>
-        [HttpGet]
-        public ActionResult<IEnumerable<ResponseItemModel>> GetAll()
-        {
-            var allItems = _service.GetAll();
-
-            if (allItems.Count == 0)
-            {
-                return NotFound("There are no items");
-            }
-            return Ok(_mapper.Map<ICollection<ResponseItemModel>>(allItems).ToList());
-        }
-
-        // GET: api/<ItemsController>
-        [HttpPost]
-        [Route("GetFilteredItems")]
-        public ActionResult<IEnumerable<ResponseItemModel>> GetFilteredItems( [FromBody] ItemFilterModel filterModel)
-        {
-            filterModel.CreateDate ??= DateTime.MinValue;
-
-            var filteredItems = _service.FilterItemByAttribute(filterModel.Location, filterModel.Category, filterModel.CreateDate, currentPage : 1, pageSize : 6 );
-
-            if (filteredItems.Count() == 0)
-            {
-                return NotFound("There are no such items");
-            }
-            return Ok(_mapper.Map<ICollection<ResponseItemModel>>(filteredItems).ToList());
-        }
-
         // GET api/<ItemsController>/5
         [HttpGet("{id}")]
         public ActionResult<ResponseItemModel> Get(string id)
@@ -112,6 +83,50 @@ namespace CareTbilisiAPI.Controllers
             }
             _service.Remove(id);
             return NoContent();
+        }
+
+        // GET: api/<ItemsController>
+        [HttpGet]
+        public ActionResult<IEnumerable<ResponseItemModel>> GetAll()
+        {
+            var allItems = _service.GetAll();
+
+            if (allItems.Count == 0)
+            {
+                return NotFound("There are no items");
+            }
+            return Ok(_mapper.Map<ICollection<ResponseItemModel>>(allItems).ToList());
+        }
+
+        // GET: api/<ItemsController>/GetFilteredItems
+        [HttpPost]
+        [Route("GetFilteredItems")]
+        public ActionResult<IEnumerable<ResponseItemModel>> GetFilteredItems( [FromBody] ItemFilterModel filterModel)
+        {
+            filterModel.CreateDate ??= DateTime.MinValue;
+
+            var filteredItems = _service.FilterItemByAttribute(filterModel.Location, filterModel.Category, filterModel.CreateDate, currentPage : 1, pageSize : 6 );
+
+            if (filteredItems.Count() == 0)
+            {
+                return NotFound("There are no such items");
+            }
+            return Ok(_mapper.Map<ICollection<ResponseItemModel>>(filteredItems).ToList());
+        }
+
+        // GET: api/<ItemsController>/GetSortedItems
+        [HttpGet]
+        [Route("GetSortedItems")]
+        public ActionResult<IEnumerable<ResponseItemModel>> GetSortedItems( int currentPage = 1, int pageSize = 6 ) 
+        {
+            var items = _service.SortItemDescByCreateDay(currentPage , pageSize);
+
+            if (items.Count() == 0)
+            {
+                return NotFound("There are no items");
+            }
+
+            return Ok(_mapper.Map<IEnumerable<ResponseItemModel>>(items).ToList());
         }
 
 
