@@ -36,7 +36,7 @@ namespace CareTbilisiAPI.Domain.Models
         public ICollection<string> Comments { get; set; }
 
         [BsonElement("createDate")]
-        public DateTime? CreateDate { get; set; }
+        public DateTime CreateDate { get; set; }
 
         [BsonElement("updateDate")]
         public DateTime? UpdateDate { get; set; }

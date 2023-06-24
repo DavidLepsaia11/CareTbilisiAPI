@@ -7,6 +7,7 @@ using CareTbilisiAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CareTbilisiAPI.Controllers
@@ -38,22 +39,17 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // GET: api/<ItemsController>
-        [HttpGet]
-        [Route("GetFilteredItems/{category : string}/{location : string}/{createDate : string }")]
-        public ActionResult<IEnumerable<ResponseItemModel>> GetFilteredItems(string? category , string? location , string? createDate)
+        [HttpPost]
+        [Route("GetFilteredItems")]
+        public ActionResult<IEnumerable<ResponseItemModel>> GetFilteredItems( [FromBody] ItemFilterModel filterModel)
         {
-            ProblemTypeEnum? itemCategoty = null;
+            filterModel.CreateDate ??= DateTime.MinValue;
 
-            if (category != null)
-            {
-               itemCategoty = (ProblemTypeEnum)Enum.Parse(typeof(ProblemTypeEnum), category);
-            } 
-
-            var filteredItems = _service.FilterItemByAttribute(location, itemCategoty, DateTime.Now);
+            var filteredItems = _service.FilterItemByAttribute(filterModel.Location, filterModel.Category, filterModel.CreateDate, currentPage : 1, pageSize : 6 );
 
             if (filteredItems.Count() == 0)
             {
-                return NotFound("There are no  such items");
+                return NotFound("There are no such items");
             }
             return Ok(_mapper.Map<ICollection<ResponseItemModel>>(filteredItems).ToList());
         }

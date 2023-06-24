@@ -17,7 +17,7 @@ namespace CareTbilisiAPI.Application.Services
 
         }
 
-        public IEnumerable<Item> FilterItemByAttribute(string? location, ProblemTypeEnum? category, DateTime? createDate, int currentPage = 1, int pageSize = 6)
+        public IEnumerable<Item> FilterItemByAttribute(string? location, ProblemTypeEnum? category, DateTime? createDate, int currentPage, int pageSize)
         {
             return _repository.FilterItemByAttribute(location, category, createDate, currentPage, pageSize);
         }

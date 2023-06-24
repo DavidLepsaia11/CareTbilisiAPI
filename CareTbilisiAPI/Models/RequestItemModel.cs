@@ -4,11 +4,11 @@ namespace CareTbilisiAPI.Models
 {
     public class RequestItemModel
     {
-        public string Description { get; set; }/* = null!;*/
+        public string? Description { get; set; }
 
         public string? Picture { get; set; }  
 
-        public string? Location { get; set; } /*= null!;*/
+        public string? Location { get; set; } 
 
         public StatusEnum? Status { get; set; }
 

@@ -21,9 +21,12 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
 
         public IEnumerable<Item> FilterItemByAttribute(string? location , ProblemTypeEnum? category , DateTime? createDate, int currentPage , int pageSize)
         {
-            Expression<Func<Item, bool>> predicate = (item) => (location != null ? item.Location == location : true ||
-                                                               category != null ? item.Category == category : true ||
-                                                               createDate != null ? item.CreateDate == createDate : true);
+           Expression<Func<Item, bool>> predicate = (item) => (   item.Category == category ||
+                                                                  item.Location == location ||
+                                                                  item.CreateDate.Year == createDate.Value.Year &&
+                                                                  item.CreateDate.Month == createDate.Value.Month &&
+                                                                  item.CreateDate.Day == createDate.Value.Day  
+                                                                                                                                    );
 
             var filteredItems = Filter(predicate)
                                 .Skip((currentPage - 1) * pageSize)
