@@ -162,6 +162,7 @@ namespace CareTbilisiAPI.Controllers
             });
         }
 
+        // Patch: api/<ItemsController>/GetPhoto/1
         [HttpGet]
         [Route("Photo/{id}")]
         public async Task<IActionResult> GetPhoto(string id)
