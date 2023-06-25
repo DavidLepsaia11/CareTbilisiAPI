@@ -14,5 +14,7 @@ namespace CareTbilisiAPI.Domain.Interfaces.Repositories
         IEnumerable<Item> FilterItemByAttribute(string? location, ProblemTypeEnum? category, DateTime? createDate, int currentPage, int pageSize);
 
         IEnumerable<Item> SortItemDescByCreateDay( int currentPage, int pageSize);
+
+        bool Exist(string id);
     }
 }

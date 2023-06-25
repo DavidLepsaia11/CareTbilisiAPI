@@ -44,6 +44,7 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
             _collection.ReplaceOne(entity => entity.Id == id, entity);
         }
 
+
         public ICollection<TEntity> Filter(Expression<Func<TEntity, bool>> predicate)
         {
             return _collection.Find(predicate).ToList();

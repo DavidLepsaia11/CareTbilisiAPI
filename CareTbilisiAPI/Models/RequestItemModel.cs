@@ -6,8 +6,6 @@ namespace CareTbilisiAPI.Models
     {
         public string? Description { get; set; }
 
-        public string? Picture { get; set; }  
-
         public string? Location { get; set; } 
 
         public StatusEnum? Status { get; set; }

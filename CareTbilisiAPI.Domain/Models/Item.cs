@@ -23,8 +23,8 @@ namespace CareTbilisiAPI.Domain.Models
         [BsonElement("location")]
         public string Location { get; set; }
 
-        [BsonElement("picture")]
-        public string? Picture { get; set; }
+        [BsonElement("picturePath")]
+        public string? PicturePath { get; set; }
 
         [BsonElement("status")]
         public StatusEnum? Status { get; set; }

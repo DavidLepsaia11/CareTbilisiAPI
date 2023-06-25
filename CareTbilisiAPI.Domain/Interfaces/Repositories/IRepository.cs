@@ -11,7 +11,7 @@ namespace CareTbilisiAPI.Domain.Interfaces.Repositories
     {
         ICollection<TEntity> GetAll();
         ICollection<TEntity> Filter(Expression<Func<TEntity, bool>> predicate);
-        TEntity GetById(string id);
+        TEntity GetById(string id);        
         TEntity Create(TEntity student);
         void Update(string id, TEntity student);
         void Remove(string id);

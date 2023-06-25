@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CareTbilisiAPI.Domain.Enums;
 using CareTbilisiAPI.Domain.Interfaces.Repositories;
+using System;
 using CareTbilisiAPI.Domain.Interfaces.Services;
 using CareTbilisiAPI.Domain.Models;
 using CareTbilisiAPI.Models;
@@ -18,11 +19,15 @@ namespace CareTbilisiAPI.Controllers
     {
         private IItemService _service;
         private IMapper _mapper;
+        private readonly IHostEnvironment _environment;
+        private readonly IConfiguration _configuration;
 
-        public ItemsController(IMapper mapper , IItemService service)
+        public ItemsController(IMapper mapper , IItemService service, IHostEnvironment environment, IConfiguration configuration)
         {
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _service = service ?? throw new ArgumentNullException(nameof(service));
+            _environment = environment ?? throw new ArgumentNullException(nameof(environment)); 
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));   
         }
 
         // GET api/<ItemsController>/5
@@ -47,6 +52,7 @@ namespace CareTbilisiAPI.Controllers
             item.CreateDate = DateTime.Now; 
 
             var createdModel = _service.Create(item);
+
             var responseModel = _mapper.Map<ResponseItemModel>(createdModel);
 
             return CreatedAtAction("Get", new { id = responseModel.Id }, responseModel);
@@ -129,8 +135,78 @@ namespace CareTbilisiAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<ResponseItemModel>>(items).ToList());
         }
 
+        // Patch: api/<ItemsController>/UploadPhoto
+        [HttpPatch]
+        [Route("UploadPhoto")]
+        public IActionResult UploadPhoto(string id , IFormFile file)
+        {
+            if (!_service.Exist(id))
+            {
+                return NotFound("Not found a such item");
+            }
+            if (file.Length == 0)
+                return BadRequest();
+
+            var item = _service.GetById(id);
+
+            var imageFilePath = SavePhoto(item.Id, file);
+
+              item.PicturePath = imageFilePath;
+
+            _service.Update(id, item);
+
+            return Ok(new
+            {
+                id,
+                photoSize = file.Length
+            });
+        }
+
+        [HttpGet]
+        [Route("Photo/{id}")]
+        public async Task<IActionResult> GetPhoto(string id)
+        {
+            if (!_service.Exist(id))
+                return NotFound("Such item  not found");
+
+            var item = _service.GetById(id);
+            var data = await GetPhotoData(item);
+
+            if (!data.Any())
+                return NotFound();
+
+            return File(data, "image/jpeg");
+        }
+
 
         #region Private Methods
+
+        private string SavePhoto( string id,  IFormFile file)
+        {
+            var imageDirectory = Path.Combine(_environment.ContentRootPath, "Uploads", "Photos", id);
+            var imageFilePath = Path.Combine(imageDirectory, file.FileName);
+
+            if (!Directory.Exists(imageDirectory))
+                Directory.CreateDirectory(imageDirectory);
+
+            using var stream = file.OpenReadStream();
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using var fileStream = System.IO.File.Create(Path.Combine(imageFilePath));
+            stream.CopyTo(fileStream);
+            fileStream.Flush();
+
+            return imageFilePath;
+        }
+
+        private static async Task<byte[]> GetPhotoData(Item item)
+        {
+            if (string.IsNullOrEmpty(item.PicturePath) || !System.IO.File.Exists(item.PicturePath))
+                return Array.Empty<byte>();
+
+            return await System.IO.File.ReadAllBytesAsync(item.PicturePath);
+        }
+
         private Item PrepareItemForUpdate(RequestItemModel requestModel, Item model) 
         {
             var modelForUpdate = _mapper.Map<Item>(requestModel);

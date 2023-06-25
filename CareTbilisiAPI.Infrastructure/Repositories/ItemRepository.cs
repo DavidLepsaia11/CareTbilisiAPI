@@ -19,6 +19,11 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
 
         }
 
+        public bool Exist(string id)
+        {
+            return _collection.Find( item => item.Id == id).Any();
+        }
+
         public IEnumerable<Item> FilterItemByAttribute(string? location , ProblemTypeEnum? category , DateTime? createDate, int currentPage , int pageSize)
         {
             Expression<Func<Item, bool>> predicate;

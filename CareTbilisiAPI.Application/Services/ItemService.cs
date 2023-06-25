@@ -17,6 +17,11 @@ namespace CareTbilisiAPI.Application.Services
 
         }
 
+        public bool Exist(string id)
+        {
+            return _repository.Exist(id);
+        }
+
         public IEnumerable<Item> FilterItemByAttribute(string? location, ProblemTypeEnum? category, DateTime? createDate, int currentPage, int pageSize)
         {
             return _repository.FilterItemByAttribute(location, category, createDate, currentPage, pageSize);
