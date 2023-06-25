@@ -21,12 +21,55 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
 
         public IEnumerable<Item> FilterItemByAttribute(string? location , ProblemTypeEnum? category , DateTime? createDate, int currentPage , int pageSize)
         {
-           Expression<Func<Item, bool>> predicate = (item) => (   item.Category == category ||
-                                                                  item.Location == location ||
-                                                                  item.CreateDate.Year == createDate.Value.Year &&
-                                                                  item.CreateDate.Month == createDate.Value.Month &&
-                                                                  item.CreateDate.Day == createDate.Value.Day  
-                                                                                                             );
+            Expression<Func<Item, bool>> predicate;
+
+            if (( !string.IsNullOrEmpty(location) && category == null && createDate.Value == DateTime.MinValue) ||
+                  (category != null && string.IsNullOrEmpty(location) && createDate.Value == DateTime.MinValue) ||
+                  (createDate.Value == DateTime.MinValue && category == null && string.IsNullOrEmpty(location))
+                )
+            {
+                predicate = (item) => (item.Category == category ||
+                                       item.Location == location ||
+                                       item.CreateDate.Year == createDate.Value.Year &&
+                                       item.CreateDate.Month == createDate.Value.Month &&
+                                       item.CreateDate.Day == createDate.Value.Day
+                                                                                    );
+            }
+
+            else if (!string.IsNullOrEmpty(location) && category != null && createDate.Value == DateTime.MinValue)
+            {
+                predicate = (item) => (item.Category == category &&
+                                       item.Location == location );
+            }
+
+            else if (string.IsNullOrEmpty(location) && category != null && createDate.Value != DateTime.MinValue)
+            {
+                predicate = (item) => (item.Category == category &&
+                                       item.CreateDate.Year == createDate.Value.Year &&
+                                       item.CreateDate.Month == createDate.Value.Month &&
+                                       item.CreateDate.Day == createDate.Value.Day
+                                        );
+            }
+
+            else if (!string.IsNullOrEmpty(location) && category == null && createDate.Value != DateTime.MinValue)
+            {
+                predicate = (item) => (item.Location == location &&
+                                      item.CreateDate.Year == createDate.Value.Year &&
+                                      item.CreateDate.Month == createDate.Value.Month &&
+                                      item.CreateDate.Day == createDate.Value.Day
+                                       );
+            }
+
+            else 
+            {
+                predicate = (item) => (item.Category == category &&
+                                       item.Location == location &&
+                                       item.CreateDate.Year == createDate.Value.Year &&
+                                       item.CreateDate.Month == createDate.Value.Month &&
+                                       item.CreateDate.Day == createDate.Value.Day
+                                                                                    );
+            }
+
 
             var filteredItems = Filter(predicate)
                                 .Skip((currentPage - 1) * pageSize)
