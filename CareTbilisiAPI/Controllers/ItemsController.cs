@@ -200,7 +200,7 @@ namespace CareTbilisiAPI.Controllers
             return imageFilePath;
         }
 
-        private static async Task<byte[]> GetPhotoData(Item item)
+        private  static async Task<byte[]> GetPhotoData(Item item)
         {
             if (string.IsNullOrEmpty(item.PicturePath) || !System.IO.File.Exists(item.PicturePath))
                 return Array.Empty<byte>();

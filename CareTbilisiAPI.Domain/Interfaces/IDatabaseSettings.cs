@@ -8,7 +8,7 @@ namespace CareTbilisiAPI.Domain.Interfaces
 {
     public interface IDatabaseSettings
     {
-        public string StudentCollectionName { get; set; }
+        public string ItemsCollectionName { get; set; }
 
         public string DatabaseName { get; set; }
 
