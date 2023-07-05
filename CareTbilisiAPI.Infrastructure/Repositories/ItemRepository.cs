@@ -24,30 +24,30 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
             return _collection.Find( item => item.Id == id).Any();
         }
 
-        public IEnumerable<Item> FilterItemByAttribute(string? location , ProblemTypeEnum? category , DateTime? createDate, int currentPage , int pageSize)
+        public IEnumerable<Item> FilterItemByAttribute(CityRegionEnum? cityRegion , ProblemTypeEnum? category , DateTime? createDate, int currentPage , int pageSize)
         {
             Expression<Func<Item, bool>> predicate;
 
-            if (( !string.IsNullOrEmpty(location) && category == null && createDate.Value == DateTime.MinValue) ||
-                  (category != null && string.IsNullOrEmpty(location) && createDate.Value == DateTime.MinValue) ||
-                  (createDate.Value == DateTime.MinValue && category == null && string.IsNullOrEmpty(location))
+            if ((cityRegion != null && category == null && createDate.Value == DateTime.MinValue) ||
+                  (category != null && cityRegion == null && createDate.Value == DateTime.MinValue) ||
+                  (createDate.Value != DateTime.MinValue && category == null && cityRegion == null)
                 )
             {
                 predicate = (item) => (item.Category == category ||
-                                       item.Location == location ||
+                                       item.CityRegion == cityRegion ||
                                        item.CreateDate.Year == createDate.Value.Year &&
                                        item.CreateDate.Month == createDate.Value.Month &&
                                        item.CreateDate.Day == createDate.Value.Day
                                                                                     );
             }
 
-            else if (!string.IsNullOrEmpty(location) && category != null && createDate.Value == DateTime.MinValue)
+            else if (cityRegion != null && category != null && createDate.Value == DateTime.MinValue)
             {
                 predicate = (item) => (item.Category == category &&
-                                       item.Location == location );
+                                       item.CityRegion == cityRegion );
             }
 
-            else if (string.IsNullOrEmpty(location) && category != null && createDate.Value != DateTime.MinValue)
+            else if (cityRegion == null && category != null && createDate.Value != DateTime.MinValue)
             {
                 predicate = (item) => (item.Category == category &&
                                        item.CreateDate.Year == createDate.Value.Year &&
@@ -56,9 +56,9 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
                                         );
             }
 
-            else if (!string.IsNullOrEmpty(location) && category == null && createDate.Value != DateTime.MinValue)
+            else if (cityRegion != null && category == null && createDate.Value != DateTime.MinValue)
             {
-                predicate = (item) => (item.Location == location &&
+                predicate = (item) => (item.CityRegion == cityRegion &&
                                       item.CreateDate.Year == createDate.Value.Year &&
                                       item.CreateDate.Month == createDate.Value.Month &&
                                       item.CreateDate.Day == createDate.Value.Day
@@ -68,7 +68,7 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
             else 
             {
                 predicate = (item) => (item.Category == category &&
-                                       item.Location == location &&
+                                       item.CityRegion == cityRegion &&
                                        item.CreateDate.Year == createDate.Value.Year &&
                                        item.CreateDate.Month == createDate.Value.Month &&
                                        item.CreateDate.Day == createDate.Value.Day

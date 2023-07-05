@@ -6,7 +6,9 @@ namespace CareTbilisiAPI.Models
     {
         public string? Description { get; set; }
 
-        public string? Location { get; set; } 
+        public string? Location { get; set; }
+
+        public CityRegionEnum? CityRegion { get; set; }
 
         public StatusEnum? Status { get; set; }
 

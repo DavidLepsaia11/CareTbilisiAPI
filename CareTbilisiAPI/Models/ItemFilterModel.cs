@@ -6,7 +6,7 @@ namespace CareTbilisiAPI.Models
     {
         public ProblemTypeEnum? Category { get; set; }
 
-        public string? Location { get; set; }
+        public CityRegionEnum? CityRegion { get; set; }
 
         public DateTime? CreateDate { get; set; }
     }

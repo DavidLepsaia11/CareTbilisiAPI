@@ -22,9 +22,9 @@ namespace CareTbilisiAPI.Application.Services
             return _repository.Exist(id);
         }
 
-        public IEnumerable<Item> FilterItemByAttribute(string? location, ProblemTypeEnum? category, DateTime? createDate, int currentPage, int pageSize)
+        public IEnumerable<Item> FilterItemByAttribute(CityRegionEnum? cityRegion, ProblemTypeEnum? category, DateTime? createDate, int currentPage, int pageSize)
         {
-            return _repository.FilterItemByAttribute(location, category, createDate, currentPage, pageSize);
+            return _repository.FilterItemByAttribute(cityRegion, category, createDate, currentPage, pageSize);
         }
 
         public IEnumerable<Item> SortItemDescByCreateDay(int currentPage, int pageSize)

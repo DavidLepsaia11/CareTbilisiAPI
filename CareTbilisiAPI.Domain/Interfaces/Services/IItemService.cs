@@ -10,7 +10,7 @@ namespace CareTbilisiAPI.Domain.Interfaces.Services
 {
     public interface IItemService : ICommandService<Item> , IQueryService<Item>
     {
-        IEnumerable<Item> FilterItemByAttribute(string? location, ProblemTypeEnum? category, DateTime? createDate, int currentPage, int pageSize);
+        IEnumerable<Item> FilterItemByAttribute(CityRegionEnum? cityRegion, ProblemTypeEnum? category, DateTime? createDate, int currentPage, int pageSize);
 
         IEnumerable<Item> SortItemDescByCreateDay(int currentPage, int pageSize);
 

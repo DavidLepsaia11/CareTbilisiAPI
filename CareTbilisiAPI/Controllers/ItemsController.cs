@@ -111,7 +111,7 @@ namespace CareTbilisiAPI.Controllers
         {
             filterModel.CreateDate ??= DateTime.MinValue;
 
-            var filteredItems = _service.FilterItemByAttribute(filterModel.Location, filterModel.Category, filterModel.CreateDate, currentPage : 1, pageSize : 6 );
+            var filteredItems = _service.FilterItemByAttribute(filterModel.CityRegion, filterModel.Category, filterModel.CreateDate, currentPage : 1, pageSize : 6 );
 
             if (filteredItems.Count() == 0)
             {
