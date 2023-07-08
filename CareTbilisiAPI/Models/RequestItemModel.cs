@@ -1,17 +1,20 @@
 ﻿using CareTbilisiAPI.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace CareTbilisiAPI.Models
 {
     public class RequestItemModel
     {
-        public string? Description { get; set; }
+        [Required, MaxLength(130, ErrorMessage = "Description max length is 130 characters")]
+        public string Description { get; set; } = string.Empty;
 
-        public string? Location { get; set; }
+        [Required, MaxLength(100, ErrorMessage = "Location max length is 100 characters")]
+        public string Location { get; set; } = string.Empty;
 
+        [Required]
         public CityRegionEnum? CityRegion { get; set; }
 
-        public StatusEnum? Status { get; set; }
-
+        [Required]
         public ProblemTypeEnum? Category { get; set; }
 
         public ICollection<string> ? Comments { get; set; }

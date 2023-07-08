@@ -56,6 +56,7 @@ namespace CareTbilisiAPI.Controllers
             var item = _mapper.Map<Item>(requestItemModel);
             item.CreateDate = DateTime.Now; 
             item.UserId = HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            item.Status = StatusEnum.NotStarted;
 
             var createdModel = _service.Create(item);
 
@@ -80,6 +81,26 @@ namespace CareTbilisiAPI.Controllers
             UpdateModel.UpdateDate = DateTime.Now;  
 
             _service.Update(id, UpdateModel);
+
+            return NoContent();
+        }
+
+        // Patch api/<ItemsController>/UpdateStatus?id=648ed42a9419eac146fe1516&status=1
+        [Authorize]
+        [HttpPatch]
+        [Route("UpdateStatus")]
+        public IActionResult UpdateStatus(string id, StatusEnum status)
+        {
+            var checkeditem = _service.GetById(id);
+
+            if (checkeditem == null)
+            {
+                return NotFound();
+            }
+            checkeditem.Status = status;
+            checkeditem.UpdateDate = DateTime.Now;
+
+            _service.Update(id, checkeditem);
 
             return NoContent();
         }

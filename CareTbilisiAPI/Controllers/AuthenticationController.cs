@@ -54,7 +54,6 @@ namespace CareTbilisiAPI.Controllers
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
 
-
         #region Private Methods
 
         private async Task<LoginResponseModel> LoginAsync(LoginRequestModel loginRequestModel)
@@ -107,7 +106,7 @@ namespace CareTbilisiAPI.Controllers
             {
                  UserName = request.UserName,
                  Email = request.Email, 
-                 NormalizedUserName = request.UserName,
+                 FullName = request.FullName
             };
 
             var createdUserResult = await _userManager.CreateAsync(userExist, request.Password);
