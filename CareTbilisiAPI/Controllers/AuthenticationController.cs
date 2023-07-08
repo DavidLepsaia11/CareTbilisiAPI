@@ -23,11 +23,12 @@ namespace CareTbilisiAPI.Controllers
         {
             _configuration = configuration;
             _userManager = userManager;
-            _roleManager = roleManager;
+        //    _roleManager = roleManager;
         }
 
 
         [HttpPost]
+        [Route("AddRole")]
         public async Task<IActionResult> CreateRole([FromBody] RoleRequestModel requestModel )
         {
             var appRole = new ApplicationRole() { Name = requestModel.Role };
@@ -52,7 +53,6 @@ namespace CareTbilisiAPI.Controllers
             var result =  await RegisterAsync(request);
             return result.Success ? Ok(result) : BadRequest(result.Message);
         }
-
 
 
         #region Private Methods

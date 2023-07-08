@@ -5,6 +5,7 @@ using CareTbilisiAPI.Domain.Interfaces;
 using CareTbilisiAPI.Domain.Interfaces.Repositories;
 using CareTbilisiAPI.Domain.Interfaces.Services;
 using CareTbilisiAPI.Domain.Models;
+using CareTbilisiAPI.ExceptionHandler;
 using CareTbilisiAPI.Infrastructure.Repositories;
 using CareTbilisiAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -89,6 +90,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -98,11 +100,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
