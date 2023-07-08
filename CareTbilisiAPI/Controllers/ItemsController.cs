@@ -166,6 +166,7 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // GET: api/<ItemsController>/GetItemsByUserId
+        [Authorize]
         [HttpGet]
         [Route("GetItemsByUserId")]
         public ActionResult<IEnumerable<ResponseItemModel>> filterItemsByUserId(string userId, int currentPage = 1, int pageSize = 6)
