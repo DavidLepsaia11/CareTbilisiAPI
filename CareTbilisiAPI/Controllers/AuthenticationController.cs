@@ -23,7 +23,7 @@ namespace CareTbilisiAPI.Controllers
         {
             _configuration = configuration;
             _userManager = userManager;
-        //    _roleManager = roleManager;
+            _roleManager = roleManager;
         }
 
 
