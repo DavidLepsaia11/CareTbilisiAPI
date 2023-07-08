@@ -35,6 +35,9 @@ namespace CareTbilisiAPI.Domain.Models
         [BsonElement("cityRegion")]
         public CityRegionEnum? CityRegion { get; set; }
 
+        [BsonElement("userId")]
+        public string UserId { get; set; }
+
         [BsonElement("comments")]
         public ICollection<string> Comments { get; set; }
 

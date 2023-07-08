@@ -40,10 +40,7 @@ builder.Services.AddSingleton<IMongoClient>(s => new MongoClient(builder.Configu
 
         IdentityOptionsAction = options =>
         {
-            options.Password.RequireDigit = false;
             options.Password.RequiredLength = 8;
-            options.Password.RequireNonAlphanumeric = true;
-            options.Password.RequireLowercase = false;
 
             // lockout
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(10);

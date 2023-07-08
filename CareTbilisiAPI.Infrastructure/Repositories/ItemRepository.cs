@@ -83,6 +83,17 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
             return filteredItems;
         }
 
+        public IEnumerable<Item> filterItemsByUserId(string userId, int currentPage, int pageSize)
+        {
+            Expression<Func<Item, bool>> predicate = entry => entry.UserId == userId;
+
+            var filteredItemsByUserId = Filter(predicate)
+                               .Skip((currentPage - 1) * pageSize)
+                               .Take(pageSize);
+
+            return filteredItemsByUserId;
+        }
+
         public IEnumerable<Item> SortItemDescByCreateDay(int currentPage, int pageSize)
         {
             var items = GetAll()

@@ -7,12 +7,15 @@ using CareTbilisiAPI.Domain.Models;
 using CareTbilisiAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CareTbilisiAPI.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class ItemsController : ControllerBase
@@ -31,6 +34,7 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // GET api/<ItemsController>/5
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<ResponseItemModel> Get(string id)
         {
@@ -45,11 +49,13 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // POST api/<ItemsController>
+        [Authorize]
         [HttpPost]
         public ActionResult<ResponseItemModel> Post([FromBody] RequestItemModel requestItemModel)
         {
             var item = _mapper.Map<Item>(requestItemModel);
             item.CreateDate = DateTime.Now; 
+            item.UserId = HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var createdModel = _service.Create(item);
 
@@ -59,6 +65,7 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // Patch api/<ItemsController>/5
+        [Authorize]
         [HttpPatch("{id}")]
         public IActionResult Patch(string id, [FromBody] RequestItemModel requestItemModel)
         {
@@ -78,6 +85,7 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // DELETE api/<ItemsController>/5
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
@@ -92,6 +100,7 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // GET: api/<ItemsController>
+        [Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<ResponseItemModel>> GetAll()
         {
@@ -135,7 +144,23 @@ namespace CareTbilisiAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<ResponseItemModel>>(items).ToList());
         }
 
+        // GET: api/<ItemsController>/GetItemsByUserId
+        [HttpGet]
+        [Route("GetItemsByUserId")]
+        public ActionResult<IEnumerable<ResponseItemModel>> filterItemsByUserId(string userId, int currentPage = 1, int pageSize = 6)
+        {
+            var items = _service.filterItemsByUserId(userId, currentPage, pageSize);
+
+            if (items.Count() == 0)
+            {
+                return NotFound("There are no added items via user");
+            }
+
+            return Ok(_mapper.Map<IEnumerable<ResponseItemModel>>(items).ToList());
+        }
+
         // Patch: api/<ItemsController>/UploadPhoto
+        [Authorize]
         [HttpPatch]
         [Route("UploadPhoto")]
         public IActionResult UploadPhoto(string id , IFormFile file)
@@ -163,6 +188,7 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // Patch: api/<ItemsController>/GetPhoto/1
+        [Authorize]
         [HttpGet]
         [Route("Photo/{id}")]
         public async Task<IActionResult> GetPhoto(string id)

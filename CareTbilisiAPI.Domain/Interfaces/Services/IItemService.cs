@@ -14,6 +14,8 @@ namespace CareTbilisiAPI.Domain.Interfaces.Services
 
         IEnumerable<Item> SortItemDescByCreateDay(int currentPage, int pageSize);
 
+        IEnumerable<Item> filterItemsByUserId(string userId, int currentPage, int pageSize);
+
         bool Exist(string id);
     }
 }
