@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Cors;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -151,6 +152,7 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // GET: api/<ItemsController>/GetSortedItems
+        [EnableCors("CorsPolicy")]
         [HttpGet]
         [Route("GetSortedItems")]
         public ActionResult<IEnumerable<ResponseItemModel>> GetSortedItems( int currentPage = 1, int pageSize = 6 ) 
