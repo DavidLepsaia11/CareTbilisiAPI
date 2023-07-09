@@ -28,17 +28,17 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
         {
             Expression<Func<Item, bool>> predicate;
 
-            if ((cityRegion != null && category == null && createDate.Value == DateTime.MinValue) ||
-                  (category != null && cityRegion == null && createDate.Value == DateTime.MinValue) ||
-                  (createDate.Value != DateTime.MinValue && category == null && cityRegion == null)
-                )
+
+            if (cityRegion != null && category == null && createDate.Value == DateTime.MinValue) predicate = (item) => (item.CityRegion == cityRegion);
+
+            else if (category != null && cityRegion == null && createDate.Value == DateTime.MinValue) predicate = (item) => (item.Category == category);
+
+            else if (createDate.Value != DateTime.MinValue && category == null && cityRegion == null)
             {
-                predicate = (item) => (item.Category == category ||
-                                       item.CityRegion == cityRegion ||
-                                       item.CreateDate.Year == createDate.Value.Year &&
-                                       item.CreateDate.Month == createDate.Value.Month &&
-                                       item.CreateDate.Day == createDate.Value.Day
-                                                                                    );
+                predicate = (item) => (
+                    item.CreateDate.Year == createDate.Value.Year &&
+                    item.CreateDate.Month == createDate.Value.Month &&
+                    item.CreateDate.Day == createDate.Value.Day);
             }
 
             else if (cityRegion != null && category != null && createDate.Value == DateTime.MinValue)
@@ -49,11 +49,10 @@ namespace CareTbilisiAPI.Infrastructure.Repositories
 
             else if (cityRegion == null && category != null && createDate.Value != DateTime.MinValue)
             {
-                predicate = (item) => (item.Category == category &&
+                predicate = (item) =>  (item.Category == category &&
                                        item.CreateDate.Year == createDate.Value.Year &&
                                        item.CreateDate.Month == createDate.Value.Month &&
-                                       item.CreateDate.Day == createDate.Value.Day
-                                        );
+                                       item.CreateDate.Day == createDate.Value.Day);
             }
 
             else if (cityRegion != null && category == null && createDate.Value != DateTime.MinValue)

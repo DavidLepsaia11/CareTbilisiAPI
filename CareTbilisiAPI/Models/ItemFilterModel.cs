@@ -4,9 +4,9 @@ namespace CareTbilisiAPI.Models
 {
     public sealed class ItemFilterModel
     {
-        public ProblemTypeEnum? Category { get; set; }
+        public string Category { get; set; } = string.Empty;
 
-        public CityRegionEnum? CityRegion { get; set; }
+        public string CityRegion { get; set; } = string.Empty;
 
         public DateTime? CreateDate { get; set; }
     }

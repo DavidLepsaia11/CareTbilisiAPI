@@ -133,7 +133,7 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // GET: api/<ItemsController>
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<ResponseItemModel>> GetAll()
         {
@@ -153,7 +153,13 @@ namespace CareTbilisiAPI.Controllers
         {
             filterModel.CreateDate ??= DateTime.MinValue;
 
-            var filteredItems = _service.FilterItemByAttribute(filterModel.CityRegion, filterModel.Category, filterModel.CreateDate, currentPage : 1, pageSize : 6 );
+            int cityRegionKey = GetEnumKey(filterModel.CityRegion, "CityRegionEnum");
+            int categoryKey = GetEnumKey(filterModel.Category, "ProblemTypeEnum");
+
+            CityRegionEnum? cityRegionEnum = cityRegionKey == -1 ? null : (CityRegionEnum)cityRegionKey;
+            ProblemTypeEnum? categoryEnum = categoryKey == -1 ? null : (ProblemTypeEnum)categoryKey;
+
+            var filteredItems = _service.FilterItemByAttribute(cityRegionEnum, categoryEnum, filterModel.CreateDate, currentPage : 1, pageSize : 6 );
 
             if (filteredItems.Count() == 0)
             {
