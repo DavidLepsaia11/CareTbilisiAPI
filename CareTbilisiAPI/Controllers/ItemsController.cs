@@ -35,7 +35,7 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // GET api/<ItemsController>/5
-        [Authorize]
+       // [Authorize]
         [HttpGet("{id}")]
         public ActionResult<ResponseItemModel> Get(string id)
         {
@@ -78,9 +78,9 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // Patch api/<ItemsController>/5
-        [Authorize]
+       // [Authorize]
         [HttpPatch("{id}")]
-        public IActionResult Patch(string id, [FromBody] RequestItemModel requestItemModel)
+        public IActionResult Patch(string id, [FromBody] RequestPatchItemModel requestItemModel)
         {
             var checkeditem = _service.GetById(id);
 
@@ -253,30 +253,29 @@ namespace CareTbilisiAPI.Controllers
                 {
                      replacedDesc = descriptionEnum.Replace(" ", "_");
                 }
-                else if (descriptionEnum.Contains("-")) 
-                {
-                    replacedDesc = descriptionEnum.Replace("-", "_");
-                }
-
 
                 if (enumType == "CityRegionEnum")
                 {
-                   var enumValue = (CityRegionEnum)Enum.Parse(typeof(CityRegionEnum), replacedDesc);
+                    var enumValue = (CityRegionEnum)Enum.Parse(typeof(CityRegionEnum), replacedDesc);
                     enumKey = (int)enumValue;
                 }
                 else if(enumType == "ProblemTypeEnum")
                 {
-                    var enumValue = (ProblemTypeEnum)Enum.Parse(typeof(ProblemTypeEnum), replacedDesc);
+                    var enumValue = !string.IsNullOrEmpty(replacedDesc) ? (ProblemTypeEnum)Enum.Parse(typeof(ProblemTypeEnum), replacedDesc) : (ProblemTypeEnum)Enum.Parse(typeof(ProblemTypeEnum), descriptionEnum);
                     enumKey = (int)enumValue;
                 }
-
+                else if (enumType == "StatusEnum")
+                {
+                    var enumValue = (ProblemTypeEnum)Enum.Parse(typeof(ProblemTypeEnum), descriptionEnum);
+                    enumKey = (int)enumValue;
+                }
             }
             catch (Exception)
             {
                 return enumKey;
             }
 
-            return 0;
+            return enumKey;
         }
 
         private string SavePhoto( string id,  IFormFile file)
@@ -305,9 +304,23 @@ namespace CareTbilisiAPI.Controllers
             return await System.IO.File.ReadAllBytesAsync(item.PicturePath);
         }
 
-        private Item PrepareItemForUpdate(RequestItemModel requestModel, Item model) 
+        private Item PrepareItemForUpdate(RequestPatchItemModel requestModel, Item model) 
         {
-            var modelForUpdate = _mapper.Map<Item>(requestModel);
+            int categoryKey = GetEnumKey(requestModel.Category, nameof(ProblemTypeEnum));
+            int cityRegionKey = GetEnumKey(requestModel.CityRegion, nameof(CityRegionEnum));
+
+
+            var modelForUpdate = new Item()
+            {
+                Category = categoryKey == -1 ? null : (ProblemTypeEnum) categoryKey,
+                CityRegion = cityRegionKey == -1 ? null : (CityRegionEnum)cityRegionKey,
+                Description = requestModel.Description,
+                Location = requestModel.Location,
+                Comments = requestModel?.Comments
+            }; 
+
+            /*_mapper.Map<Item>(requestModel);*/
+
 
             Type type = model.GetType();
 
