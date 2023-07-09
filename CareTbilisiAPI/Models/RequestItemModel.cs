@@ -12,10 +12,10 @@ namespace CareTbilisiAPI.Models
         public string Location { get; set; } = string.Empty;
 
         [Required]
-        public CityRegionEnum? CityRegion { get; set; }
+        public string? CityRegion { get; set; }
 
         [Required]
-        public ProblemTypeEnum? Category { get; set; }
+        public string? Category { get; set; }
 
         public ICollection<string> ? Comments { get; set; }
     }

@@ -50,14 +50,25 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // POST api/<ItemsController>
-        [Authorize]
+       // [Authorize]
         [HttpPost]
         public ActionResult<ResponseItemModel> Post([FromBody] RequestItemModel requestItemModel)
         {
-            var item = _mapper.Map<Item>(requestItemModel);
-            item.CreateDate = DateTime.Now; 
-            item.UserId = HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            item.Status = StatusEnum.NotStarted;
+
+            // var item = _mapper.Map<Item>(requestItemModel);
+
+            var item = new Item()
+            {
+                CreateDate = DateTime.Now,
+                UserId = HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                Status = StatusEnum.NotStarted,
+                Category = (ProblemTypeEnum)GetEnumKey(requestItemModel.Category, nameof(ProblemTypeEnum)),
+                CityRegion = (CityRegionEnum)GetEnumKey(requestItemModel.CityRegion, nameof(CityRegionEnum)),
+                Description = requestItemModel.Description,
+                Location = requestItemModel.Location,
+                Comments = requestItemModel?.Comments
+            };
+
 
             var createdModel = _service.Create(item);
 
@@ -231,6 +242,42 @@ namespace CareTbilisiAPI.Controllers
 
 
         #region Private Methods
+
+        private int GetEnumKey(string descriptionEnum, string enumType) 
+        {
+            string replacedDesc = string.Empty;
+            int enumKey = -1;
+            try
+            {
+                if (descriptionEnum.Contains(" "))
+                {
+                     replacedDesc = descriptionEnum.Replace(" ", "_");
+                }
+                else if (descriptionEnum.Contains("-")) 
+                {
+                    replacedDesc = descriptionEnum.Replace("-", "_");
+                }
+
+
+                if (enumType == "CityRegionEnum")
+                {
+                   var enumValue = (CityRegionEnum)Enum.Parse(typeof(CityRegionEnum), replacedDesc);
+                    enumKey = (int)enumValue;
+                }
+                else if(enumType == "ProblemTypeEnum")
+                {
+                    var enumValue = (ProblemTypeEnum)Enum.Parse(typeof(ProblemTypeEnum), replacedDesc);
+                    enumKey = (int)enumValue;
+                }
+
+            }
+            catch (Exception)
+            {
+                return enumKey;
+            }
+
+            return 0;
+        }
 
         private string SavePhoto( string id,  IFormFile file)
         {

@@ -8,11 +8,11 @@ namespace CareTbilisiAPI.Domain.Enums
 {
     public enum ProblemTypeEnum
     {
-        RoadInfrastructure,
-        BuildingInfrastucture,
-        ParkInfrastructure,
-        DemagedPlants,
-        DemagedStreetLight,
-        Rubbish
+        საგზაო_ინფრასტრუქტურა,
+        ნაგებობის_ინფრასტრუქტურა,
+        პარკის_ინფრასტრუქტურა,
+        ხე_მცენარეების_დაზიანება, // ხე-მცენარეების
+        საგზაო_განათების_დაზიანება,
+        დანაგვიანება
     }
 }
