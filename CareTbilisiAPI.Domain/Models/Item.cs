@@ -27,12 +27,15 @@ namespace CareTbilisiAPI.Domain.Models
         public string? PicturePath { get; set; }
 
         [BsonElement("status")]
+        [BsonRepresentation(BsonType.String)]
         public StatusEnum? Status { get; set; }
 
         [BsonElement("category")]
+        [BsonRepresentation(BsonType.String)]
         public ProblemTypeEnum? Category { get; set; }
 
         [BsonElement("cityRegion")]
+        [BsonRepresentation(BsonType.String)]
         public CityRegionEnum? CityRegion { get; set; }
 
         [BsonElement("userId")]

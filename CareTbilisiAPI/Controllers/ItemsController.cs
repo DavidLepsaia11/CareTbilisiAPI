@@ -55,7 +55,7 @@ namespace CareTbilisiAPI.Controllers
         public ActionResult<ResponseItemModel> Post([FromBody] RequestItemModel requestItemModel)
         {
 
-            // var item = _mapper.Map<Item>(requestItemModel);
+            //  var item = _mapper.Map<Item>(requestItemModel);
 
             var item = new Item()
             {
@@ -98,10 +98,10 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // Patch api/<ItemsController>/UpdateStatus?id=648ed42a9419eac146fe1516&status=1
-        [Authorize]
+      //  [Authorize]
         [HttpPatch]
         [Route("UpdateStatus")]
-        public IActionResult UpdateStatus(string id, StatusEnum status)
+        public IActionResult UpdateStatus(string id, string status)
         {
             var checkeditem = _service.GetById(id);
 
@@ -109,7 +109,9 @@ namespace CareTbilisiAPI.Controllers
             {
                 return NotFound();
             }
-            checkeditem.Status = status;
+
+            int statusKey = GetEnumKey(status, nameof(StatusEnum));
+            checkeditem.Status = statusKey == -1 ? null : (StatusEnum) statusKey;
             checkeditem.UpdateDate = DateTime.Now;
 
             _service.Update(id, checkeditem);
@@ -185,7 +187,7 @@ namespace CareTbilisiAPI.Controllers
         }
 
         // GET: api/<ItemsController>/GetItemsByUserId
-        [Authorize]
+      //  [Authorize]
         [HttpGet]
         [Route("GetItemsByUserId")]
         public ActionResult<IEnumerable<ResponseItemModel>> filterItemsByUserId(string userId, int currentPage = 1, int pageSize = 6)
@@ -272,7 +274,7 @@ namespace CareTbilisiAPI.Controllers
                 }
                 else if (enumType == "StatusEnum")
                 {
-                    var enumValue = (ProblemTypeEnum)Enum.Parse(typeof(ProblemTypeEnum), descriptionEnum);
+                    var enumValue = (StatusEnum)Enum.Parse(typeof(StatusEnum), descriptionEnum);
                     enumKey = (int)enumValue;
                 }
             }
