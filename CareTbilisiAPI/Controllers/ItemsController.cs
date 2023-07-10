@@ -251,10 +251,16 @@ namespace CareTbilisiAPI.Controllers
 
         #region Private Methods
 
-        private int GetEnumKey(string descriptionEnum, string enumType) 
+        private int GetEnumKey(string? descriptionEnum, string enumType) 
         {
             string replacedDesc = string.Empty;
             int enumKey = -1;
+
+            if (descriptionEnum == null)
+            {
+                return enumKey;
+            }
+
             try
             {
                 if (descriptionEnum.Contains(" "))
